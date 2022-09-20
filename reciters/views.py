@@ -1,7 +1,6 @@
 
+from django.http import HttpResponse
 from django.shortcuts import render
-
-import reciters
 from .models import RecitersProfile,Surah
 from .serializers import ReciterProfileSerializer,RecitersListWithImageSerializer,SurahSerializer
 from rest_framework.viewsets import ModelViewSet
@@ -10,8 +9,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 import json
-
+from darul_masajid.settings import BASE_DIR
 from reciters import serializers
+
 # Create your views here.
 
 class RecitersProfileAPIView(APIView):
@@ -58,7 +58,7 @@ class SurahAPIView(ModelViewSet):
     def retrieve(self,request,pk=None):
         id=pk
         print("id:",id)
-        surah=Surah.objects.filter(recitersprofile__idid=id)
+        surah=Surah.objects.filter(reciter_id=id)
         print("surah:",surah)
         serializer=SurahSerializer(surah,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
@@ -66,11 +66,20 @@ class SurahAPIView(ModelViewSet):
 
 
 
-def fun(request,pk=None):
-    surahs=Surah.objects.filter(recitersprofile__id=id)
-    return render(request,"reciters/home.html",{"surahs":surahs})
+# def fun(request,pk):
+#     surahs=Surah.objects.filter(reciter_id=pk)
+#     return render(request,"reciters/home.html",{"surahs":surahs})
 
-        
+def saveData(request):
+    with open(f"{BASE_DIR}/khalil_al_husary.json") as f:
+        data = json.load(f)
+        print(data)
+        reciter = RecitersProfile.objects.get(id=7)
+        for chapter in data:
+            surah = Surah.objects.create(chapter_id=chapter["chapter_id"],file_size=chapter["file_size"],duration=chapter["duration"],format=chapter["format"],verse_timings=json.dumps(chapter["verse_timings"]),reciter=reciter)
+            surah.save()
+            print(chapter,"saved")
+        return HttpResponse({"msg":json.dumps(data)})
 
 
 

@@ -7,7 +7,6 @@ class RecitersProfile(models.Model):
     image=models.ImageField(upload_to="reciters/",null=True)
     about=models.TextField()
 
-
     def __str__(self):
         return self.name
 
@@ -16,8 +15,8 @@ class RecitersProfile(models.Model):
 
 class Surah(models.Model):
     chapter_id=models.AutoField(primary_key=True)
-    title=models.CharField(max_length=220)
-    surah_meaning=models.TextField()
+    title=models.CharField(max_length=220,default="")
+    surah_meaning=models.TextField(default="")
     location=models.CharField(max_length=200,null=True,blank=True)
     file_size=models.DecimalField(max_digits=19, decimal_places=1)
     format=models.CharField(max_length=100)

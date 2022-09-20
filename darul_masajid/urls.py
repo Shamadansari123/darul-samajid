@@ -28,9 +28,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("profile/<int:pk>",views.RecitersProfileAPIView.as_view()),
     path("profile/",views.RecitersProfileAPIView.as_view()),
+    path("p/",views.saveData),
     path("reciterslist/",views.RecitersListWithImageAPIView.as_view()),
     path("",include(router.urls)),
-    path("fun/",views.fun),
+    # path("fun/<int:pk>",views.fun),
     # path("surah/<int:pk>",views.SurahAPIView.as_view()),
    
     
